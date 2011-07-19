@@ -31,11 +31,12 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import org.bouncyastle.util.encoders.Base64;
 
 /**
+ * Utility methods.
+ * 
  * @author Markus Kilås
  */
 public class CertTools {

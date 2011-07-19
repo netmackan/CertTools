@@ -28,7 +28,8 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 
 /**
- *
+ * Activity showing a certificate.
+ * 
  * @author Markus Kilås
  */
 public class DisplayCertActivity extends Activity {
@@ -41,7 +42,6 @@ public class DisplayCertActivity extends Activity {
         Intent intent = getIntent();
         System.out.println("intent: " + intent);
        
-        
         byte[] certbytes = intent.getByteArrayExtra("certbytes");
         
         TextView tv = new TextView(this);
@@ -54,7 +54,6 @@ public class DisplayCertActivity extends Activity {
         } catch (CertificateException ex) {
             tv.setText("Error: " + ex.getLocalizedMessage());
         }
-        setContentView(tv);
-        
+        setContentView(tv);   
     }
 }

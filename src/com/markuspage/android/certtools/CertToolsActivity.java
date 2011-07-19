@@ -42,6 +42,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * The main Activity showing the list of certificates.
  * 
  * @author Markus Kilås
  */

@@ -20,7 +20,8 @@
 package com.markuspage.android.certtools;
 
 /**
- *
+ * An item in the list of certificates.
+ * 
  * @author Markus Kilås
  */
 public class PEMItem {
