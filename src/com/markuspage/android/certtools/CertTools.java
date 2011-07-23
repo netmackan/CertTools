@@ -54,12 +54,14 @@ public class CertTools {
         
         try {
             bufRdr = new BufferedReader(new InputStreamReader(in));
-            String line;
+            
+            String line = bufRdr.readLine();
+            if (!line.equals(BEGIN_CERTIFICATE) 
+                    && !line.equals(BEGIN_TRUSTED_CERTIFICATE)) {
+                throw new IOException("Missing PEM header");
+            }
+            
             while ((line = bufRdr.readLine()) != null) {
-                if (line.equals(BEGIN_CERTIFICATE) 
-                        || line.equals(BEGIN_TRUSTED_CERTIFICATE)) {
-                    continue;
-                }
                 ByteArrayOutputStream ostr = new ByteArrayOutputStream();
                 PrintStream opstr = new PrintStream(ostr);
                 opstr.print(line);
@@ -84,9 +86,13 @@ public class CertTools {
         return ret;
     }
     
-    public static Certificate getCert(byte[] bytes) throws CertificateException {
+    public static Certificate getCert(InputStream in) throws CertificateException {
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        return cf.generateCertificate(new ByteArrayInputStream(bytes));
+        return cf.generateCertificate(in);
+    }
+    
+    public static Certificate getCert(byte[] bytes) throws CertificateException {
+        return getCert(new ByteArrayInputStream(bytes));
     }
     
     public static String getName(Certificate b) {

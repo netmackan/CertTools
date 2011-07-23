@@ -47,12 +47,16 @@ public class DisplayCertActivity extends Activity {
         TextView tv = new TextView(this);
         tv.setVerticalScrollBarEnabled(true);
         tv.setMovementMethod(new ScrollingMovementMethod());
-        try {
-            Certificate cert = CertTools.getCert(certbytes);
-            setTitle(CertTools.getName(cert));
-            tv.setText(cert.toString());
-        } catch (CertificateException ex) {
-            tv.setText("Error: " + ex.getLocalizedMessage());
+        if (certbytes == null) {
+            tv.setText("(No Certificate)");
+        } else {
+            try {
+                Certificate cert = CertTools.getCert(certbytes);
+                setTitle(CertTools.getName(cert));
+                tv.setText(cert.toString());
+            } catch (CertificateException ex) {
+                tv.setText("Error: " + ex.getLocalizedMessage());
+            }
         }
         setContentView(tv);   
     }

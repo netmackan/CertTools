@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -88,7 +89,12 @@ public class CertToolsActivity extends ListActivity
           
             List<Certificate> certs;
             try {
-                certs = CertTools.getCertsFromPEM(new FileInputStream(file));
+                try {
+                    certs = CertTools.getCertsFromPEM(new FileInputStream(file));
+                } catch (IOException ex) {
+                    Logger.getLogger(CertToolsActivity.class.getName()).log(Level.INFO, "Not a PEM: " + ex.getMessage());
+                    certs = Collections.singletonList(CertTools.getCert(new FileInputStream(file)));
+                }
                 int index = 0;
                 for (final Certificate b : certs) {
                     index++;
@@ -96,20 +102,14 @@ public class CertToolsActivity extends ListActivity
                     items.add(new PEMItem("(" + index + ") " + CertTools.getName(b), bytes));
                 }
             } catch (FileNotFoundException ex) {
-                TextView tv = new TextView(this);
-                setContentView(tv);
-                tv.setText("File not found: \n" + ex.getLocalizedMessage());
                 Logger.getLogger(CertToolsActivity.class.getName()).log(Level.SEVERE, null, ex);
+                items.add(new PEMItem("File not found: \n" + ex.getLocalizedMessage(), null));
             } catch (IOException ex) {
-                TextView tv = new TextView(this);
-                tv.setText("Error: \n" + ex.getLocalizedMessage());
-                setContentView(tv);
                 Logger.getLogger(CertToolsActivity.class.getName()).log(Level.SEVERE, null, ex);
+                items.add(new PEMItem("Error: \n" + ex.getLocalizedMessage(), null));
             } catch (CertificateException ex) { // TODO move into for loop
-                TextView tv = new TextView(this);
-                tv.setText("Error: \n" + ex.getLocalizedMessage());
-                setContentView(tv);
                 Logger.getLogger(CertToolsActivity.class.getName()).log(Level.SEVERE, null, ex);
+                items.add(new PEMItem("Error: \n" + ex.getLocalizedMessage(), null));
             }
         }
     }
