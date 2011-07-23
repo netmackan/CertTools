@@ -20,6 +20,7 @@
 package com.markuspage.android.certtools;
 
 import android.app.ListActivity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,7 +32,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.cert.Certificate;
@@ -83,6 +83,8 @@ public class CertToolsActivity extends ListActivity
               });
 
             System.out.println("Intent: " + intent);
+            
+            ContentResolver cr = getContentResolver();
             Uri uri = intent.getData();
             File file = new File(uri.getPath());
             setTitle(file.getName());
@@ -90,10 +92,10 @@ public class CertToolsActivity extends ListActivity
             List<Certificate> certs;
             try {
                 try {
-                    certs = CertTools.getCertsFromPEM(new FileInputStream(file));
+                    certs = CertTools.getCertsFromPEM(cr.openInputStream(uri));
                 } catch (IOException ex) {
                     Logger.getLogger(CertToolsActivity.class.getName()).log(Level.INFO, "Not a PEM: " + ex.getMessage());
-                    certs = Collections.singletonList(CertTools.getCert(new FileInputStream(file)));
+                    certs = Collections.singletonList(CertTools.getCert(cr.openInputStream(uri)));
                 }
                 int index = 0;
                 for (final Certificate b : certs) {
