@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 
-    Copyright (C) 2011 Markus Kilås
+    Copyright (C) 2011, 2012 Markus Kilås
    
     This file is part of CertTools.
   
@@ -102,5 +102,5 @@
         </activity>
     </application>
     
-    <uses-sdk android:minSdkVersion="3"/>
+    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="14"/>
 </manifest> 

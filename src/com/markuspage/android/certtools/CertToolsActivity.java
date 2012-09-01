@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 Markus Kilås
+ *  Copyright (C) 2011, 2012 Markus Kilås
  * 
  *  This file is part of CertTools.
  *
@@ -24,13 +24,12 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -49,21 +48,27 @@ import java.util.logging.Logger;
  */
 public class CertToolsActivity extends ListActivity
 {
+    private static final int PICKFILE_RESULT_CODE = 1;
+    
+    private final List<PEMItem> items = new ArrayList<PEMItem>();
+    
+    private static final PEMItem NO_CERTIFICATES = new PEMItem("(No certificates)", null);
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         
-        final List<PEMItem> items = new ArrayList<PEMItem>();
-        
         setListAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, 
                 items));
-        
-        Intent intent = getIntent();
+        createFromIntent(getIntent());
+    }
+   
+    private void createFromIntent(Intent intent) {
+        items.clear();
         if (intent.getData() == null) {
-            items.add(new PEMItem("(No certificates)", null));
-            // TODO: Request file manager intent
+            items.add(NO_CERTIFICATES);
         } else {
               ListView lv = getListView();
               lv.setTextFilterEnabled(true);
@@ -115,5 +120,44 @@ public class CertToolsActivity extends ListActivity
             }
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        System.out.println("Created options menu");
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.open:
+                Toast.makeText(this, "Open certificate file", Toast.LENGTH_SHORT).show();
+                
+                Intent intentBrowseFiles = new Intent(Intent.ACTION_GET_CONTENT);
+                intentBrowseFiles.setType("*/*");
+                intentBrowseFiles.addCategory(Intent.CATEGORY_OPENABLE);
+                
+                startActivityForResult(intentBrowseFiles, PICKFILE_RESULT_CODE);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PICKFILE_RESULT_CODE: 
+                if(resultCode==RESULT_OK){
+                    createFromIntent(data);
+                    getListView().invalidateViews();
+                }
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+    
     
 }
