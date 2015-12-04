@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 Markus Kilås
+ *  Copyright (C) 2011, 2012, 2015 Markus Kilås
  * 
  *  This file is part of CertTools.
  *
@@ -47,6 +47,7 @@ public class DisplayCertActivity extends Activity {
         TextView tv = new TextView(this);
         tv.setVerticalScrollBarEnabled(true);
         tv.setMovementMethod(new ScrollingMovementMethod());
+        tv.setTextIsSelectable(true);
         if (certbytes == null) {
             tv.setText("(No Certificate)");
         } else {
