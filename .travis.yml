@@ -24,3 +24,4 @@ android:
     #- sys-img-x86-android-17
     
 install: ant debug
+script: true
