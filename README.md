@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/netmackan/CertTools.svg?branch=master)](https://travis-ci.org/netmackan/CertTools)
+
 Certificate (X.509) viewer for Android.
 
 See COPYING for general license terms.
